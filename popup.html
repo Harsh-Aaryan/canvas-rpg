@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas RPG</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Top bars section -->
+    <div class="bars-container">
+      <div class="xp-container">
+        <div class="label">XP:</div>
+        <div class="progress-bar">
+          <div id="xp-bar" class="progress-fill xp"></div>
+        </div>
+        <div id="xp-text" class="progress-text">0/100</div>
+      </div>
+      
+      <div class="boss-health-container">
+        <div class="label">Boss Health:</div>
+        <div class="progress-bar">
+          <div id="boss-health-bar" class="progress-fill health"></div>
+        </div>
+        <div id="boss-health-text" class="progress-text">100/100</div>
+      </div>
+    </div>
+    
+    <!-- Main content area -->
+    <div class="game-area">
+      <!-- Quest section -->
+      <div class="quest-container">
+        <h2>Quests</h2>
+        <div id="quest-list">
+          <!-- Quests will be inserted here dynamically -->
+          <div class="loading">Loading quests from Canvas...</div>
+        </div>
+      </div>
+      
+      <!-- Boss section -->
+      <div class="boss-container">
+        <div id="boss-image" class="boss-circle">
+          <span>Boss</span>
+          <!-- We'll replace this with an actual boss image -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Settings section -->
+    <div class="settings-section">
+      <h3>Settings</h3>
+      <div class="setting-item">
+        <label for="canvas-token">Canvas API Token:</label>
+        <input type="password" id="canvas-token" placeholder="Enter your Canvas API token">
+      </div>
+      <div class="setting-item">
+        <label for="canvas-domain">Canvas Domain:</label>
+        <input type="text" id="canvas-domain" placeholder="your-school.instructure.com">
+      </div>
+      <button id="save-settings">Save Settings</button>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
