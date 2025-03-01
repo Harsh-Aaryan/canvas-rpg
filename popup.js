@@ -18,6 +18,11 @@ let gameState = {
   const canvasTokenInput = document.getElementById('canvas-token');
   const canvasDomainInput = document.getElementById('canvas-domain');
   const saveSettingsBtn = document.getElementById('save-settings');
+  const mainTab = document.getElementById('main-tab');
+  const settingsTab = document.getElementById('settings-tab');
+  const mainContent = document.getElementById('main-content');
+  const settingsContent = document.getElementById('settings-content');
+  const attackButton = document.getElementById('attack-button');
   
   // Initialize the extension
   document.addEventListener('DOMContentLoaded', async () => {
@@ -35,6 +40,16 @@ let gameState = {
     
     // Setup event listeners
     saveSettingsBtn.addEventListener('click', saveSettings);
+    
+    // Tab switching
+    mainTab.addEventListener('click', () => switchTab('main'));
+    settingsTab.addEventListener('click', () => switchTab('settings'));
+    
+    // Attack button
+    attackButton.addEventListener('click', attackBoss);
+    
+    // Start with main tab active
+    switchTab('main');
   });
   
   // Save settings to chrome storage
@@ -256,4 +271,51 @@ let gameState = {
       // Save game state
       await saveGameState();
     }
+  }
+  
+  // Switch between tabs
+  function switchTab(tabName) {
+    // Update tab buttons
+    mainTab.classList.toggle('active', tabName === 'main');
+    settingsTab.classList.toggle('active', tabName === 'settings');
+    
+    // Update content visibility
+    mainContent.classList.toggle('active', tabName === 'main');
+    settingsContent.classList.toggle('active', tabName === 'settings');
+  }
+  
+  // Attack boss function
+  async function attackBoss() {
+    if (gameState.xp < 10) {
+      alert('Not enough XP to attack! Complete more tasks to gain XP.');
+      return;
+    }
+    
+    // Calculate random damage between 5-15
+    const damage = Math.floor(Math.random() * 11) + 5;
+    // Calculate random XP cost between 5-10
+    const xpCost = Math.floor(Math.random() * 6) + 5;
+    
+    // Update game state
+    gameState.bossHealth = Math.max(0, gameState.bossHealth - damage);
+    gameState.xp = Math.max(0, gameState.xp - xpCost);
+    
+    // Check if boss was defeated
+    if (gameState.bossHealth <= 0) {
+      gameState.bossHealth = 0;
+      alert('Boss defeated! A new boss will appear soon...');
+      setTimeout(() => {
+        gameState.bossHealth = gameState.maxBossHealth = Math.floor(gameState.maxBossHealth * 1.5);
+        updateProgressBars();
+      }, 3000);
+    }
+    
+    // Update UI
+    updateProgressBars();
+    
+    // Save game state
+    await saveGameState();
+    
+    // Show attack result
+    alert(`You dealt ${damage} damage to the boss and used ${xpCost} XP!`);
   }

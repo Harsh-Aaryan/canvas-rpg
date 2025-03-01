@@ -6,47 +6,59 @@
 </head>
 <body>
   <div class="container">
-    <!-- Top bars section -->
-    <div class="bars-container">
-      <div class="xp-container">
-        <div class="label">XP:</div>
-        <div class="progress-bar">
-          <div id="xp-bar" class="progress-fill xp"></div>
-        </div>
-        <div id="xp-text" class="progress-text">0/100</div>
-      </div>
-      
-      <div class="boss-health-container">
-        <div class="label">Boss Health:</div>
-        <div class="progress-bar">
-          <div id="boss-health-bar" class="progress-fill health"></div>
-        </div>
-        <div id="boss-health-text" class="progress-text">100/100</div>
-      </div>
+    <!-- Tab navigation -->
+    <div class="tabs">
+      <button id="main-tab" class="tab active">Game</button>
+      <button id="settings-tab" class="tab">Settings</button>
     </div>
     
-    <!-- Main content area -->
-    <div class="game-area">
-      <!-- Quest section -->
-      <div class="quest-container">
-        <h2>Quests</h2>
-        <div id="quest-list">
-          <!-- Quests will be inserted here dynamically -->
-          <div class="loading">Loading quests from Canvas...</div>
+    <!-- Main game content -->
+    <div id="main-content" class="tab-content active">
+      <!-- Top bars section -->
+      <div class="bars-container">
+        <div class="xp-container">
+          <div class="label">XP:</div>
+          <div class="progress-bar">
+            <div id="xp-bar" class="progress-fill xp"></div>
+          </div>
+          <div id="xp-text" class="progress-text">0/100</div>
+        </div>
+        
+        <div class="boss-health-container">
+          <div class="label">Boss Health:</div>
+          <div class="progress-bar">
+            <div id="boss-health-bar" class="progress-fill health"></div>
+          </div>
+          <div id="boss-health-text" class="progress-text">100/100</div>
         </div>
       </div>
       
-      <!-- Boss section -->
-      <div class="boss-container">
-        <div id="boss-image" class="boss-circle">
-          <span>Boss</span>
-          <!-- We'll replace this with an actual boss image -->
+      <!-- Main content area -->
+      <div class="game-area">
+        <!-- Quest section -->
+        <div class="quest-container">
+          <h2>Quests</h2>
+          <div id="quest-list">
+            <!-- Quests will be inserted here dynamically -->
+            <div class="loading">Loading quests from Canvas...</div>
+          </div>
+        </div>
+        
+        <!-- Boss section -->
+        <div class="boss-container">
+          <div class="boss-content">
+            <div id="boss-image" class="boss-circle">
+              <span>Boss</span>
+              <!-- We'll replace this with an actual boss image -->
+            </div>
+            <button id="attack-button" class="attack-button">Attack Boss</button>
+          </div>
         </div>
       </div>
     </div>
     
-    <!-- Settings section -->
-    <div class="settings-section">
+    <!-- Settings content -->
+    <div id="settings-content" class="tab-content">
       <h3>Settings</h3>
       <div class="setting-item">
         <label for="canvas-token">Canvas API Token:</label>

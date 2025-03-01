@@ -195,3 +195,53 @@ body {
     font-style: italic;
     padding: 20px 0;
   }
+
+  /* Tab styling */
+  .tabs {
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    background-color: rgba(44, 62, 80, 0.7);
+    color: #ecf0f1;
+    cursor: pointer;
+    border: none;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+  }
+
+  .tab.active {
+    background-color: #f39c12;
+    color: #2c3e50;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  /* Attack button styling */
+  .attack-button {
+    background: linear-gradient(to bottom right, #e74c3c, #c0392b);
+    padding: 15px 30px;
+    font-size: 18px;
+    margin-top: 15px;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .attack-button:hover {
+    background: linear-gradient(to bottom right, #c0392b, #a93226);
+    transform: translateY(-2px);
+  }
+
+  .attack-button:active {
+    transform: translateY(1px);
+  }
