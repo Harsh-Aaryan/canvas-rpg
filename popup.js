@@ -6,26 +6,42 @@ let gameState = {
   bossHealth: 100,
   maxBossHealth: 100,
   tasks: [],
-  completedTasks: []
+  completedTasks: [],
+  lastNotificationTime: 0 // Track when the last notification was shown
 };
 
-// DOM Elements
-const xpBar = document.getElementById('xp-bar');
-const xpText = document.getElementById('xp-text');
-const bossHealthBar = document.getElementById('boss-health-bar');
-const bossHealthText = document.getElementById('boss-health-text');
-const questList = document.getElementById('quest-list');
-const canvasTokenInput = document.getElementById('canvas-token');
-const canvasDomainInput = document.getElementById('canvas-domain');
-const saveSettingsBtn = document.getElementById('save-settings');
-const mainTab = document.getElementById('main-tab');
-const settingsTab = document.getElementById('settings-tab');
-const mainContent = document.getElementById('main-content');
-const settingsContent = document.getElementById('settings-content');
-const attackButton = document.getElementById('attack-button');
+// DOM Elements - will be initialized after DOM is loaded
+let xpBar;
+let xpText;
+let bossHealthBar;
+let bossHealthText;
+let questList;
+let canvasTokenInput;
+let canvasDomainInput;
+let saveSettingsBtn;
+let mainTab;
+let settingsTab;
+let mainContent;
+let settingsContent;
+let attackButton;
 
 // Initialize the extension
 document.addEventListener('DOMContentLoaded', async () => {
+  // Initialize DOM elements
+  xpBar = document.getElementById('xp-bar');
+  xpText = document.getElementById('xp-text');
+  bossHealthBar = document.getElementById('boss-health-bar');
+  bossHealthText = document.getElementById('boss-health-text');
+  questList = document.getElementById('quest-list');
+  canvasTokenInput = document.getElementById('canvas-token');
+  canvasDomainInput = document.getElementById('canvas-domain');
+  saveSettingsBtn = document.getElementById('save-settings');
+  mainTab = document.getElementById('main-tab');
+  settingsTab = document.getElementById('settings-tab');
+  mainContent = document.getElementById('main-content');
+  settingsContent = document.getElementById('settings-content');
+  attackButton = document.getElementById('attack-button');
+  
   // Load saved settings and game state
   await loadSettings();
   await loadGameState();
@@ -38,26 +54,74 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetchCanvasTasks();
   }
   
+  // Get DOM elements
+  const settingsButton = document.getElementById('settings-button');
+  const backButton = document.getElementById('back-button');
+  const saveSettingsButton = document.getElementById('save-settings');
+  
   // Setup event listeners
   saveSettingsBtn.addEventListener('click', saveSettings);
   
   // Tab switching
-  mainTab.addEventListener('click', () => switchTab('main'));
-  settingsTab.addEventListener('click', () => switchTab('settings'));
+  mainTab?.addEventListener('click', () => switchTab('main'));
+  settingsTab?.addEventListener('click', () => switchTab('settings'));
   
-  // Attack button
+  // Attack button - make sure to use the attackButton variable we initialized above
   attackButton.addEventListener('click', attackBoss);
+  console.log('Attack button event listener added');
   
   // Settings button opens settings tab
-  const settingsButton = document.getElementById('settings-button');
   settingsButton.addEventListener('click', () => switchTab('settings'));
   
   // Back button returns to main game
-  const backButton = document.getElementById('back-button');
   backButton.addEventListener('click', () => switchTab('main'));
+  
+  // Settings button click handler
+  settingsButton.addEventListener('click', () => {
+    mainContent.classList.remove('active');
+    settingsContent.classList.add('active');
+  });
+
+  // Back button click handler
+  backButton.addEventListener('click', () => {
+    settingsContent.classList.remove('active');
+    mainContent.classList.add('active');
+  });
+
+  // Save settings button click handler
+  saveSettingsButton.addEventListener('click', async () => {
+    const token = document.getElementById('canvas-token').value;
+    const domain = document.getElementById('canvas-domain').value;
+
+    if (!token || !domain) {
+      showNotification('Please enter both Canvas API token and domain.', 'warning', 2500);
+      return;
+    }
+
+    try {
+      await chrome.storage.sync.set({
+        canvasToken: token,
+        canvasDomain: domain
+      });
+      showNotification('Settings saved successfully!', 'success', 2000);
+      
+      // Switch back to main content
+      settingsContent.classList.remove('active');
+      mainContent.classList.add('active');
+      
+      // Refresh quests with new settings
+      fetchCanvasTasks();
+    } catch (error) {
+      showNotification('Error saving settings: ' + error.message, 'warning', 3000);
+    }
+  });
   
   // Start with main tab active
   switchTab('main');
+  
+  // Initialize with main content visible
+  mainContent.classList.add('active');
+  settingsContent.classList.remove('active');
 });
 
 // Save settings to chrome storage
@@ -66,7 +130,7 @@ async function saveSettings() {
   const domain = canvasDomainInput.value;
   
   if (!token || !domain) {
-    alert('Please enter both Canvas API token and domain.');
+    showNotification('Please enter both Canvas API token and domain.', 'warning', 2500);
     return;
   }
   
@@ -75,7 +139,7 @@ async function saveSettings() {
     canvasDomain: domain
   });
   
-  alert('Settings saved successfully!');
+  showNotification('Settings saved successfully!', 'success', 2000);
   fetchCanvasTasks();
 }
 
@@ -101,6 +165,10 @@ async function saveGameState() {
 
 // Update XP and boss health bars
 function updateProgressBars() {
+  console.log('Updating progress bars');
+  console.log(`XP: ${gameState.xp}/${gameState.maxXp}`);
+  console.log(`Boss Health: ${gameState.bossHealth}/${gameState.maxBossHealth}`);
+  
   // Update XP bar
   const xpPercentage = (gameState.xp / gameState.maxXp) * 100;
   xpBar.style.width = `${xpPercentage}%`;
@@ -233,37 +301,32 @@ async function toggleTaskCompletion(taskId) {
     task.completed = !task.completed;
     
     if (task.completed) {
-      // Task was completed, add XP and reduce boss health
-      gameState.xp += 10;
-      gameState.bossHealth -= 5;
+      // Task was completed, add XP only
+      const xpGained = 10;
+      gameState.xp += xpGained;
       
       // Check if player leveled up
       if (gameState.xp >= gameState.maxXp) {
         gameState.level++;
         gameState.xp = gameState.xp - gameState.maxXp;
         gameState.maxXp = Math.floor(gameState.maxXp * 1.5);
-        alert(`Level up! You are now level ${gameState.level}!`);
+        showNotification(`Level up! You are now level ${gameState.level}!`, 'success', 3000);
+      } else {
+        // Only show XP gain notification occasionally
+        const currentTime = Date.now();
+        const timeSinceLastNotification = currentTime - gameState.lastNotificationTime;
+        
+        if (timeSinceLastNotification > 8000) {
+          showNotification(`Gained ${xpGained} XP!`, 'xp', 1200);
+        }
       }
       
-      // Check if boss was defeated
-      if (gameState.bossHealth <= 0) {
-        gameState.bossHealth = 0;
-        alert('Boss defeated! A new boss will appear soon...');
-        setTimeout(() => {
-          gameState.bossHealth = gameState.maxBossHealth = Math.floor(gameState.maxBossHealth * 1.5);
-          updateProgressBars();
-        }, 3000);
-      }
-      
-      // Add to completed tasks
+      // Add to completed tasks and remove from active tasks
       gameState.completedTasks.push(taskId);
-      
-      // Remove from active tasks
       gameState.tasks.splice(taskIndex, 1);
     } else {
-      // Task was uncompleted, remove XP and increase boss health
+      // Task was uncompleted, remove XP only
       gameState.xp = Math.max(0, gameState.xp - 10);
-      gameState.bossHealth = Math.min(gameState.maxBossHealth, gameState.bossHealth + 5);
       
       // Remove from completed tasks
       const completedIndex = gameState.completedTasks.indexOf(taskId);
@@ -272,14 +335,13 @@ async function toggleTaskCompletion(taskId) {
       }
     }
     
-    // Update UI
+    // Update UI and save game state
     updateProgressBars();
     renderTasks();
-    
-    // Save game state
     await saveGameState();
   }
 }
+
 
 // Switch between tabs
 function switchTab(tabName) {
@@ -295,10 +357,40 @@ function switchTab(tabName) {
   }
 }
 
+// Show a notification
+function showNotification(message, type = 'damage', duration = 1500) {
+  const container = document.getElementById('notification-container');
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  
+  container.appendChild(notification);
+  
+  // Trigger reflow to ensure transition works
+  notification.offsetHeight;
+  
+  // Show the notification
+  notification.classList.add('show');
+  
+  // Remove the notification after the specified duration
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      container.removeChild(notification);
+    }, 300); // Wait for the fade out transition
+  }, duration);
+  
+  // Update the last notification time
+  gameState.lastNotificationTime = Date.now();
+}
+
 // Attack boss function
 async function attackBoss() {
+  console.log('Attack boss function called');
+  
   if (gameState.xp < 10) {
-    alert('Not enough XP to attack! Complete more tasks to gain XP.');
+    // Always show warning when out of XP
+    showNotification('Not enough XP to attack!', 'warning', 2000);
     return;
   }
   
@@ -307,18 +399,39 @@ async function attackBoss() {
   // Calculate random XP cost between 5-10
   const xpCost = Math.floor(Math.random() * 6) + 5;
   
+  console.log(`Dealing ${damage} damage to boss, costing ${xpCost} XP`);
+  
   // Update game state
   gameState.bossHealth = Math.max(0, gameState.bossHealth - damage);
   gameState.xp = Math.max(0, gameState.xp - xpCost);
   
+  // Add visual effect to boss
+  const bossImage = document.getElementById('boss-image');
+  bossImage.classList.add('damaged');
+  
+  // Remove the effect after a short delay
+  setTimeout(() => {
+    bossImage.classList.remove('damaged');
+  }, 500);
+  
   // Check if boss was defeated
   if (gameState.bossHealth <= 0) {
     gameState.bossHealth = 0;
-    alert('Boss defeated! A new boss will appear soon...');
+    showNotification('Boss defeated! A new boss will appear soon!', 'success', 3000);
     setTimeout(() => {
       gameState.bossHealth = gameState.maxBossHealth = Math.floor(gameState.maxBossHealth * 1.5);
       updateProgressBars();
     }, 3000);
+  } else {
+    // Only show damage notifications infrequently (every 5 seconds)
+    const currentTime = Date.now();
+    const timeSinceLastNotification = currentTime - gameState.lastNotificationTime;
+    
+    // Show notification only if it's been more than 5 seconds since the last one
+    // or if it's a critical hit (damage > 12)
+    if (timeSinceLastNotification > 5000 || damage > 12) {
+      showNotification(`Dealt ${damage} damage! Used ${xpCost} XP`, 'damage', 1200);
+    }
   }
   
   // Update UI
@@ -326,61 +439,4 @@ async function attackBoss() {
   
   // Save game state
   await saveGameState();
-  
-  // Show attack result
-  alert(`You dealt ${damage} damage to the boss and used ${xpCost} XP!`);
 }
-
-// Add these event listeners to your existing DOMContentLoaded event
-document.addEventListener('DOMContentLoaded', () => {
-  // Get DOM elements
-  const settingsButton = document.getElementById('settings-button');
-  const backButton = document.getElementById('back-button');
-  const saveSettingsButton = document.getElementById('save-settings');
-  const mainContent = document.getElementById('main-content');
-  const settingsContent = document.getElementById('settings-content');
-
-  // Settings button click handler
-  settingsButton.addEventListener('click', () => {
-    mainContent.classList.remove('active');
-    settingsContent.classList.add('active');
-  });
-
-  // Back button click handler
-  backButton.addEventListener('click', () => {
-    settingsContent.classList.remove('active');
-    mainContent.classList.add('active');
-  });
-
-  // Save settings button click handler
-  saveSettingsButton.addEventListener('click', async () => {
-    const token = document.getElementById('canvas-token').value;
-    const domain = document.getElementById('canvas-domain').value;
-
-    if (!token || !domain) {
-      alert('Please enter both Canvas API token and domain.');
-      return;
-    }
-
-    try {
-      await chrome.storage.sync.set({
-        canvasToken: token,
-        canvasDomain: domain
-      });
-      alert('Settings saved successfully!');
-      
-      // Switch back to main content
-      settingsContent.classList.remove('active');
-      mainContent.classList.add('active');
-      
-      // Refresh quests with new settings
-      fetchCanvasTasks();
-    } catch (error) {
-      alert('Error saving settings: ' + error.message);
-    }
-  });
-
-  // Initialize with main content visible
-  mainContent.classList.add('active');
-  settingsContent.classList.remove('active');
-});

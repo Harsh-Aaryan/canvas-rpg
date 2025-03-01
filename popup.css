@@ -248,6 +248,7 @@ body {
   
   .action-button:hover {
     background-color: #27ae60;
+    transform: scale(1.02);
   }
   
   /* Tab content */
@@ -282,6 +283,20 @@ body {
   
   .attack-button:active {
     transform: scale(0.95);
+  }
+  
+  /* Boss damage effect */
+  .boss-circle.damaged {
+    animation: damage-flash 0.5s;
+    border-color: #ff0000;
+  }
+  
+  @keyframes damage-flash {
+    0% { transform: scale(1); background-color: #ecf0f1; }
+    25% { transform: scale(1.1); background-color: #e74c3c; }
+    50% { transform: scale(0.9); background-color: #c0392b; }
+    75% { transform: scale(1.05); background-color: #e74c3c; }
+    100% { transform: scale(1); background-color: #ecf0f1; }
   }
   
   /* Settings content */
@@ -386,4 +401,50 @@ body {
   .action-button:hover {
     background-color: #27ae60;
     transform: scale(1.02);
+  }
+
+  /* Notification system */
+  #notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 200px;
+    pointer-events: none;
+  }
+  
+  .notification {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.3s, transform 0.3s;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-left: 3px solid #e74c3c;
+  }
+  
+  .notification.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .notification.damage {
+    border-left-color: #e74c3c;
+  }
+  
+  .notification.xp {
+    border-left-color: #3498db;
+  }
+  
+  .notification.warning {
+    border-left-color: #f39c12;
+  }
+  
+  .notification.success {
+    border-left-color: #2ecc71;
   }
