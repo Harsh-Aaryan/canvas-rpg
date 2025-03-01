@@ -337,9 +337,9 @@ body {
     justify-content: center;
     align-items: center;
     margin: 0 auto 20px;
-    position: absolute;
-    top: 52%;
-    right: 30%
+    position: relative;
+    top: 80px;
+    right: 0px;
     image-rendering: pixelated;
   }
   
@@ -414,8 +414,8 @@ body {
   
   /* Settings button */
   .settings-button {
-    position: absolute;
-    top: 140%;
+    position: relative;
+    top: 20px;
     left: 20px;
     background-color: #3498db;
     color: white;
@@ -498,9 +498,9 @@ body {
     text-transform: uppercase;
     image-rendering: pixelated;
     border: 3px solid #333;
-    position: absolute;
-    top: 153%;
-    right: 5%;
+    position: relative;
+    top: 75px;
+    right: 0px;
   }
   
   .attack-button:hover {
