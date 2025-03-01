@@ -6,12 +6,6 @@
 </head>
 <body>
   <div class="container">
-    <!-- Tab navigation -->
-    <div class="tabs">
-      <button id="main-tab" class="tab active">Game</button>
-      <button id="settings-tab" class="tab">Settings</button>
-    </div>
-    
     <!-- Main game content -->
     <div id="main-content" class="tab-content active">
       <!-- Top bars section -->
@@ -55,6 +49,9 @@
           </div>
         </div>
       </div>
+      
+      <!-- Settings button -->
+      <button id="settings-button" class="settings-button">⚙️ Settings</button>
     </div>
     
     <!-- Settings content -->
@@ -68,7 +65,8 @@
         <label for="canvas-domain">Canvas Domain:</label>
         <input type="text" id="canvas-domain" placeholder="your-school.instructure.com">
       </div>
-      <button id="save-settings">Save Settings</button>
+      <button id="save-settings" class="action-button">Save Settings</button>
+      <button id="back-button" class="back-button">← Back to Game</button>
     </div>
   </div>
   <script src="popup.js"></script>

@@ -48,6 +48,14 @@ let gameState = {
     // Attack button
     attackButton.addEventListener('click', attackBoss);
     
+    // Settings button opens settings tab
+    const settingsButton = document.getElementById('settings-button');
+    settingsButton.addEventListener('click', () => switchTab('settings'));
+    
+    // Back button returns to main game
+    const backButton = document.getElementById('back-button');
+    backButton.addEventListener('click', () => switchTab('main'));
+    
     // Start with main tab active
     switchTab('main');
   });
@@ -275,13 +283,16 @@ let gameState = {
   
   // Switch between tabs
   function switchTab(tabName) {
-    // Update tab buttons
-    mainTab.classList.toggle('active', tabName === 'main');
-    settingsTab.classList.toggle('active', tabName === 'settings');
+    const mainContent = document.getElementById('main-content');
+    const settingsContent = document.getElementById('settings-content');
     
-    // Update content visibility
-    mainContent.classList.toggle('active', tabName === 'main');
-    settingsContent.classList.toggle('active', tabName === 'settings');
+    if (tabName === 'main') {
+      mainContent.classList.add('active');
+      settingsContent.classList.remove('active');
+    } else if (tabName === 'settings') {
+      mainContent.classList.remove('active');
+      settingsContent.classList.add('active');
+    }
   }
   
   // Attack boss function
@@ -319,3 +330,57 @@ let gameState = {
     // Show attack result
     alert(`You dealt ${damage} damage to the boss and used ${xpCost} XP!`);
   }
+
+  // Add these event listeners to your existing DOMContentLoaded event
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get DOM elements
+    const settingsButton = document.getElementById('settings-button');
+    const backButton = document.getElementById('back-button');
+    const saveSettingsButton = document.getElementById('save-settings');
+    const mainContent = document.getElementById('main-content');
+    const settingsContent = document.getElementById('settings-content');
+
+    // Settings button click handler
+    settingsButton.addEventListener('click', () => {
+      mainContent.classList.remove('active');
+      settingsContent.classList.add('active');
+    });
+
+    // Back button click handler
+    backButton.addEventListener('click', () => {
+      settingsContent.classList.remove('active');
+      mainContent.classList.add('active');
+    });
+
+    // Save settings button click handler
+    saveSettingsButton.addEventListener('click', async () => {
+      const token = document.getElementById('canvas-token').value;
+      const domain = document.getElementById('canvas-domain').value;
+
+      if (!token || !domain) {
+        alert('Please enter both Canvas API token and domain.');
+        return;
+      }
+
+      try {
+        await chrome.storage.sync.set({
+          canvasToken: token,
+          canvasDomain: domain
+        });
+        alert('Settings saved successfully!');
+        
+        // Switch back to main content
+        settingsContent.classList.remove('active');
+        mainContent.classList.add('active');
+        
+        // Refresh quests with new settings
+        fetchCanvasTasks();
+      } catch (error) {
+        alert('Error saving settings: ' + error.message);
+      }
+    });
+
+    // Initialize with main content visible
+    mainContent.classList.add('active');
+    settingsContent.classList.remove('active');
+  });
