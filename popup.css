@@ -13,9 +13,9 @@ body {
     padding: 20px;
     background-color: #34495e;
     /* Uncomment when you want to add a background image */
-    /* background-image: url('images/background.jpg');
+    background-image: url('images/background.jpg');
     background-size: cover;
-    background-position: center; */
+    background-position: center;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
   }
