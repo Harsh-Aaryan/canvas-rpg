@@ -19,8 +19,6 @@ let questList;
 let canvasTokenInput;
 let canvasDomainInput;
 let saveSettingsBtn;
-let mainTab;
-let settingsTab;
 let mainContent;
 let settingsContent;
 let attackButton;
@@ -36,8 +34,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   canvasTokenInput = document.getElementById('canvas-token');
   canvasDomainInput = document.getElementById('canvas-domain');
   saveSettingsBtn = document.getElementById('save-settings');
-  mainTab = document.getElementById('main-tab');
-  settingsTab = document.getElementById('settings-tab');
   mainContent = document.getElementById('main-content');
   settingsContent = document.getElementById('settings-content');
   attackButton = document.getElementById('attack-button');
@@ -62,27 +58,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Setup event listeners
   saveSettingsBtn.addEventListener('click', saveSettings);
   
-  // Tab switching
-  mainTab?.addEventListener('click', () => switchTab('main'));
-  settingsTab?.addEventListener('click', () => switchTab('settings'));
-  
   // Attack button - make sure to use the attackButton variable we initialized above
   attackButton.addEventListener('click', attackBoss);
   console.log('Attack button event listener added');
   
   // Settings button opens settings tab
-  settingsButton.addEventListener('click', () => switchTab('settings'));
-  
-  // Back button returns to main game
-  backButton.addEventListener('click', () => switchTab('main'));
-  
-  // Settings button click handler
   settingsButton.addEventListener('click', () => {
     mainContent.classList.remove('active');
     settingsContent.classList.add('active');
   });
 
-  // Back button click handler
+  // Back button returns to main game
   backButton.addEventListener('click', () => {
     settingsContent.classList.remove('active');
     mainContent.classList.add('active');
@@ -115,9 +101,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       showNotification('Error saving settings: ' + error.message, 'warning', 3000);
     }
   });
-  
-  // Start with main tab active
-  switchTab('main');
   
   // Initialize with main content visible
   mainContent.classList.add('active');
@@ -291,7 +274,6 @@ function renderTasks() {
 
 // Toggle task completion
 async function toggleTaskCompletion(taskId) {
-  // Find the task
   const taskIndex = gameState.tasks.findIndex(task => task.id === taskId);
   
   if (taskIndex !== -1) {
@@ -342,48 +324,6 @@ async function toggleTaskCompletion(taskId) {
   }
 }
 
-
-// Switch between tabs
-function switchTab(tabName) {
-  const mainContent = document.getElementById('main-content');
-  const settingsContent = document.getElementById('settings-content');
-  
-  if (tabName === 'main') {
-    mainContent.classList.add('active');
-    settingsContent.classList.remove('active');
-  } else if (tabName === 'settings') {
-    mainContent.classList.remove('active');
-    settingsContent.classList.add('active');
-  }
-}
-
-// Show a notification
-function showNotification(message, type = 'damage', duration = 1500) {
-  const container = document.getElementById('notification-container');
-  const notification = document.createElement('div');
-  notification.className = `notification ${type}`;
-  notification.textContent = message;
-  
-  container.appendChild(notification);
-  
-  // Trigger reflow to ensure transition works
-  notification.offsetHeight;
-  
-  // Show the notification
-  notification.classList.add('show');
-  
-  // Remove the notification after the specified duration
-  setTimeout(() => {
-    notification.classList.remove('show');
-    setTimeout(() => {
-      container.removeChild(notification);
-    }, 300); // Wait for the fade out transition
-  }, duration);
-  
-  // Update the last notification time
-  gameState.lastNotificationTime = Date.now();
-}
-
 // Attack boss function
 async function attackBoss() {
   console.log('Attack boss function called');
@@ -418,6 +358,19 @@ async function attackBoss() {
   if (gameState.bossHealth <= 0) {
     gameState.bossHealth = 0;
     showNotification('Boss defeated! A new boss will appear soon!', 'success', 3000);
+    
+    // Award XP for defeating boss
+    const bossXpReward = 50 + (gameState.level * 10);
+    gameState.xp += bossXpReward;
+    
+    // Check for level up
+    if (gameState.xp >= gameState.maxXp) {
+      gameState.level++;
+      gameState.xp = gameState.xp - gameState.maxXp;
+      gameState.maxXp = Math.floor(gameState.maxXp * 1.5);
+      showNotification(`Level up! You are now level ${gameState.level}!`, 'success', 3000);
+    }
+    
     setTimeout(() => {
       gameState.bossHealth = gameState.maxBossHealth = Math.floor(gameState.maxBossHealth * 1.5);
       updateProgressBars();
@@ -439,4 +392,31 @@ async function attackBoss() {
   
   // Save game state
   await saveGameState();
+}
+
+// Show a notification
+function showNotification(message, type = 'damage', duration = 1500) {
+  const container = document.getElementById('notification-container');
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  
+  container.appendChild(notification);
+  
+  // Trigger reflow to ensure transition works
+  notification.offsetHeight;
+  
+  // Show the notification
+  notification.classList.add('show');
+  
+  // Remove the notification after the specified duration
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      container.removeChild(notification);
+    }, 300); // Wait for the fade out transition
+  }, duration);
+  
+  // Update the last notification time
+  gameState.lastNotificationTime = Date.now();
 }
