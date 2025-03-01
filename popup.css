@@ -279,12 +279,13 @@ body {
   /* Settings button */
   .settings-button {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom:px;
+  px
+    right: 450px;
     background-color: #3498db;
     color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 1px 2px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
