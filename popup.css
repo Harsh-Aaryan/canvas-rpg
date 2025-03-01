@@ -19,6 +19,63 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
 	image-rendering: pixelated; 
+    position: relative;
+    overflow: hidden; /* Ensure clouds don't overflow */
+  }
+  
+  /* Parallax clouds layer */
+  .container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%; /* Make it wider than container to allow for animation */
+    height: 100%;
+    background-image: url('images/clouds.png');
+    background-repeat: repeat-x;
+    background-position: 0 40px; /* Position clouds a bit lower */
+    background-size: auto 100px; /* Make clouds a bit larger */
+    opacity: 0.8; /* Slightly more visible */
+    z-index: 0; /* Place behind other content */
+    animation: cloudMove 80s linear infinite; /* Slower movement for more subtle effect */
+    image-rendering: pixelated;
+    pointer-events: none; /* Allow clicking through clouds */
+  }
+  
+  /* Add a second cloud layer for depth */
+  .container::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-image: url('images/clouds.png');
+    background-repeat: repeat-x;
+    background-position: 0 10px;
+    background-size: auto 60px; /* Smaller clouds in the distance */
+    opacity: 0.5; /* More transparent */
+    z-index: 0;
+    animation: cloudMove 120s linear infinite; /* Even slower movement for parallax effect */
+    image-rendering: pixelated;
+    pointer-events: none;
+    transform: scaleX(-1); /* Flip horizontally for variety */
+  }
+  
+  /* Cloud animation */
+  @keyframes cloudMove {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%); /* Move left by half the width for seamless loop */
+    }
+  }
+  
+  /* Ensure all content is above clouds */
+  .bars-container, .game-area, .settings-button, #notification-container, #settings-content {
+    position: relative;
+    z-index: 1;
   }
   
   /* Progress bars styling */
@@ -279,13 +336,12 @@ body {
   /* Settings button */
   .settings-button {
     position: absolute;
-    bottom:px;
-  px
-    right: 450px;
+    bottom: 20px;
+    right: 20px;
     background-color: #3498db;
     color: white;
     border: none;
-    padding: 1px 2px;
+    padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
@@ -340,6 +396,7 @@ body {
     display: none;
     position: relative;
   }
+
   
   .tab-content.active {
     display: block;
