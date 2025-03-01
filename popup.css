@@ -8,8 +8,8 @@ body {
   }
   
   .container {
-    width: 30vw;
-    min-height: 25vh;
+    width: 600px;
+    min-height: 400px;
     padding: 20px;
     background-color: #000000;
     /* Uncomment when you want to add a background image */
