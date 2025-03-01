@@ -11,13 +11,14 @@ body {
     width: 600px;
     min-height: 400px;
     padding: 20px;
-    background-color: #34495e;
+    background-color: #000000;
     /* Uncomment when you want to add a background image */
     background-image: url('images/background.png');
     background-size: cover;
     background-position: center;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
+	image-rendering: pixelated; 
   }
   
   /* Progress bars styling */
