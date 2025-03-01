@@ -233,9 +233,8 @@ let gameState = {
       task.completed = !task.completed;
       
       if (task.completed) {
-        // Task was completed, add XP and reduce boss health
+        // Task was completed, add XP only (no boss damage)
         gameState.xp += 10;
-        gameState.bossHealth -= 5;
         
         // Check if player leveled up
         if (gameState.xp >= gameState.maxXp) {
@@ -245,25 +244,14 @@ let gameState = {
           alert(`Level up! You are now level ${gameState.level}!`);
         }
         
-        // Check if boss was defeated
-        if (gameState.bossHealth <= 0) {
-          gameState.bossHealth = 0;
-          alert('Boss defeated! A new boss will appear soon...');
-          setTimeout(() => {
-            gameState.bossHealth = gameState.maxBossHealth = Math.floor(gameState.maxBossHealth * 1.5);
-            updateProgressBars();
-          }, 3000);
-        }
-        
         // Add to completed tasks
         gameState.completedTasks.push(taskId);
         
         // Remove from active tasks
         gameState.tasks.splice(taskIndex, 1);
       } else {
-        // Task was uncompleted, remove XP and increase boss health
+        // Task was uncompleted, remove XP only
         gameState.xp = Math.max(0, gameState.xp - 10);
-        gameState.bossHealth = Math.min(gameState.maxBossHealth, gameState.bossHealth + 5);
         
         // Remove from completed tasks
         const completedIndex = gameState.completedTasks.indexOf(taskId);
@@ -297,28 +285,45 @@ let gameState = {
   
   // Attack boss function
   async function attackBoss() {
-    if (gameState.xp < 10) {
-      alert('Not enough XP to attack! Complete more tasks to gain XP.');
+    // Random XP cost between 5 and 15
+    const xpCost = Math.floor(Math.random() * 11) + 5;
+    
+    // Check if player has enough XP
+    if (gameState.xp < xpCost) {
+      alert(`Not enough XP! This attack needs ${xpCost} XP. Complete more tasks to gain XP.`);
       return;
     }
     
-    // Calculate random damage between 5-15
-    const damage = Math.floor(Math.random() * 11) + 5;
-    // Calculate random XP cost between 5-10
-    const xpCost = Math.floor(Math.random() * 6) + 5;
+    // Calculate damage based on XP cost (higher XP cost = more damage)
+    // Damage will be between 1.5x to 2.5x the XP cost
+    const damageMultiplier = 1.5 + Math.random();
+    const damage = Math.floor(xpCost * damageMultiplier);
     
     // Update game state
+    gameState.xp -= xpCost;
     gameState.bossHealth = Math.max(0, gameState.bossHealth - damage);
-    gameState.xp = Math.max(0, gameState.xp - xpCost);
+    
+    // Show attack animation
+    const bossImage = document.getElementById('boss-image');
+    bossImage.style.transform = 'scale(0.9)';
+    setTimeout(() => {
+      bossImage.style.transform = 'scale(1)';
+    }, 100);
     
     // Check if boss was defeated
     if (gameState.bossHealth <= 0) {
       gameState.bossHealth = 0;
-      alert('Boss defeated! A new boss will appear soon...');
+      alert(`Boss defeated! You dealt ${damage} damage using ${xpCost} XP!\nA stronger boss will appear soon...`);
+      
+      // Spawn a new, stronger boss after a delay
       setTimeout(() => {
-        gameState.bossHealth = gameState.maxBossHealth = Math.floor(gameState.maxBossHealth * 1.5);
+        gameState.maxBossHealth = Math.floor(gameState.maxBossHealth * 1.5);
+        gameState.bossHealth = gameState.maxBossHealth;
         updateProgressBars();
       }, 3000);
+    } else {
+      // Show attack result
+      alert(`You dealt ${damage} damage using ${xpCost} XP!`);
     }
     
     // Update UI
@@ -326,61 +331,13 @@ let gameState = {
     
     // Save game state
     await saveGameState();
-    
-    // Show attack result
-    alert(`You dealt ${damage} damage to the boss and used ${xpCost} XP!`);
   }
 
-  // Add these event listeners to your existing DOMContentLoaded event
-  document.addEventListener('DOMContentLoaded', () => {
-    // Get DOM elements
-    const settingsButton = document.getElementById('settings-button');
-    const backButton = document.getElementById('back-button');
-    const saveSettingsButton = document.getElementById('save-settings');
-    const mainContent = document.getElementById('main-content');
-    const settingsContent = document.getElementById('settings-content');
-
-    // Settings button click handler
-    settingsButton.addEventListener('click', () => {
-      mainContent.classList.remove('active');
-      settingsContent.classList.add('active');
-    });
-
-    // Back button click handler
-    backButton.addEventListener('click', () => {
-      settingsContent.classList.remove('active');
-      mainContent.classList.add('active');
-    });
-
-    // Save settings button click handler
-    saveSettingsButton.addEventListener('click', async () => {
-      const token = document.getElementById('canvas-token').value;
-      const domain = document.getElementById('canvas-domain').value;
-
-      if (!token || !domain) {
-        alert('Please enter both Canvas API token and domain.');
-        return;
-      }
-
-      try {
-        await chrome.storage.sync.set({
-          canvasToken: token,
-          canvasDomain: domain
-        });
-        alert('Settings saved successfully!');
-        
-        // Switch back to main content
-        settingsContent.classList.remove('active');
-        mainContent.classList.add('active');
-        
-        // Refresh quests with new settings
-        fetchCanvasTasks();
-      } catch (error) {
-        alert('Error saving settings: ' + error.message);
-      }
-    });
-
-    // Initialize with main content visible
-    mainContent.classList.add('active');
-    settingsContent.classList.remove('active');
-  });
+  // Add this CSS to make the boss image transition smooth
+  const style = document.createElement('style');
+  style.textContent = `
+    #boss-image {
+      transition: transform 0.1s ease-in-out;
+    }
+  `;
+  document.head.appendChild(style);
