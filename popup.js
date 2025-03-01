@@ -169,12 +169,12 @@ function updateProgressBars() {
   console.log(`XP: ${gameState.xp}/${gameState.maxXp}`);
   console.log(`Boss Health: ${gameState.bossHealth}/${gameState.maxBossHealth}`);
   
-  // Update XP bar
+  // Update XP bar (light bar)
   const xpPercentage = (gameState.xp / gameState.maxXp) * 100;
   xpBar.style.width = `${xpPercentage}%`;
   xpText.textContent = `${gameState.xp}/${gameState.maxXp}`;
   
-  // Update boss health bar
+  // Update boss health (light bar)
   const healthPercentage = (gameState.bossHealth / gameState.maxBossHealth) * 100;
   bossHealthBar.style.width = `${healthPercentage}%`;
   bossHealthText.textContent = `${gameState.bossHealth}/${gameState.maxBossHealth}`;
