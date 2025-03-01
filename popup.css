@@ -13,9 +13,9 @@ body {
     padding: 20px;
     background-color: #000000;
     /* Uncomment when you want to add a background image */
-    background-image: url('images/background.png');
+    /*background-image: url('images/background.png');
     background-size: cover;
-    background-position: center;
+    background-position: center; */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
 	image-rendering: pixelated; 
@@ -34,7 +34,7 @@ body {
     background-image: url('images/clouds.png');
     background-repeat: repeat-x;
     background-position: 0 40px; /* Position clouds a bit lower */
-    background-size: auto 100px; /* Make clouds a bit larger */
+    background-size: auto 400px; /* Make clouds a bit larger */
     opacity: 0.8; /* Slightly more visible */
     z-index: 0; /* Place behind other content */
     animation: cloudMove 80s linear infinite; /* Slower movement for more subtle effect */
@@ -53,13 +53,75 @@ body {
     background-image: url('images/clouds.png');
     background-repeat: repeat-x;
     background-position: 0 10px;
-    background-size: auto 60px; /* Smaller clouds in the distance */
+    background-size: auto 200px; /* Smaller clouds in the distance */
     opacity: 0.5; /* More transparent */
     z-index: 0;
     animation: cloudMove 120s linear infinite; /* Even slower movement for parallax effect */
     image-rendering: pixelated;
     pointer-events: none;
     transform: scaleX(-1); /* Flip horizontally for variety */
+  }
+  
+  .tower-container {
+	width: 640px;
+    min-height: 440px;
+	margin: -20px;
+    /* Uncomment when you want to add a background image */
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+	image-rendering: pixelated; 
+    position: fixed;
+    overflow: hidden; /* Ensure clouds don't overflow */
+  }
+  
+  /* Parallax clouds layer */
+  .tower-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%; /* Make it wider than container to allow for animation */
+    height: 100%;
+    background-image: url('images/towers.png');
+    background-repeat: repeat-x;
+    background-position: 0 100px; /* Position clouds a bit lower */
+    background-size: auto 250px; /* Make clouds a bit larger */
+    opacity: 1; /* Slightly more visible */
+    z-index: 0; /* Place behind other content */
+    animation: cloudMove 180s linear infinite; /* Slower movement for more subtle effect */
+    image-rendering: pixelated;
+    pointer-events: none; /* Allow clicking through clouds */
+  }
+  
+  .trees-container {
+	width: 640px;
+    min-height: 440px;
+	margin: -20px;
+    /* Uncomment when you want to add a background image */
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+	image-rendering: pixelated; 
+    position: fixed;
+    overflow: hidden; /* Ensure clouds don't overflow */
+  }
+  
+  /* Parallax clouds layer */
+  .trees-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%; /* Make it wider than container to allow for animation */
+    height: 100%;
+    background-image: url('images/trees.png');
+    background-repeat: repeat-x;
+    background-position: 0 140px; /* Position clouds a bit lower */
+    background-size: auto 200px; /* Make clouds a bit larger */
+    opacity: 1; /* Slightly more visible */
+    z-index: 0; /* Place behind other content */
+    animation: cloudMove 100s linear infinite; /* Slower movement for more subtle effect */
+    image-rendering: pixelated;
+    pointer-events: none; /* Allow clicking through clouds */
   }
   
   /* Cloud animation */
@@ -70,6 +132,21 @@ body {
     100% {
       transform: translateX(-50%); /* Move left by half the width for seamless loop */
     }
+  }
+  
+  .ground-container {
+	width: 640px;
+    min-height: 440px;
+	margin: -20px;
+    /* Uncomment when you want to add a background image */
+	background-image: url('images/ground.png');
+    background-size: cover;
+    background-position: center;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+	image-rendering: pixelated; 
+    position: fixed;
+    overflow: hidden; /* Ensure clouds don't overflow */
   }
   
   /* Ensure all content is above clouds */
