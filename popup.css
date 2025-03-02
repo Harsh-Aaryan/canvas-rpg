@@ -84,12 +84,13 @@ body {
     height: 100%;
     background-image: url('images/towers.png');
     background-repeat: repeat-x;
-    background-position: 0 100px; /* Position clouds a bit lower */
+    background-position: 0 90px; /* Position clouds a bit lower */
     background-size: auto 250px; /* Make clouds a bit larger */
     opacity: 1; /* Slightly more visible */
     z-index: 0; /* Place behind other content */
     animation: cloudMove 180s linear infinite; /* Slower movement for more subtle effect */
     image-rendering: pixelated;
+	filter: brightness(0.25);
     pointer-events: none; /* Allow clicking through clouds */
   }
   
@@ -115,12 +116,45 @@ body {
     height: 100%;
     background-image: url('images/trees.png');
     background-repeat: repeat-x;
-    background-position: 0 140px; /* Position clouds a bit lower */
+    background-position: 0 160px; /* Position clouds a bit lower */
     background-size: auto 200px; /* Make clouds a bit larger */
     opacity: 1; /* Slightly more visible */
     z-index: 0; /* Place behind other content */
     animation: cloudMove 100s linear infinite; /* Slower movement for more subtle effect */
     image-rendering: pixelated;
+	filter: brightness(0.75);
+    pointer-events: none; /* Allow clicking through clouds */
+  }
+  
+  .trees-two-container {
+	width: 640px;
+    min-height: 440px;
+	margin: -20px;
+    /* Uncomment when you want to add a background image */
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+	image-rendering: pixelated; 
+    position: fixed;
+    overflow: hidden; /* Ensure clouds don't overflow */
+  }
+  
+  /* Parallax clouds layer */
+  .trees-two-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%; /* Make it wider than container to allow for animation */
+    height: 100%;
+    background-image: url('images/trees-2.png');
+    background-repeat: repeat-x;
+    background-position: 0 140px; /* Position clouds a bit lower */
+    background-size: auto 200px; /* Make clouds a bit larger */
+    opacity: 1; /* Slightly more visible */
+    z-index: 0; /* Place behind other content */
+    animation: cloudMove 140s linear infinite; /* Slower movement for more subtle effect */
+    image-rendering: pixelated;
+	filter: brightness(0.5);
     pointer-events: none; /* Allow clicking through clouds */
   }
   
@@ -140,6 +174,21 @@ body {
 	margin: -20px;
     /* Uncomment when you want to add a background image */
 	background-image: url('images/ground.png');
+    background-size: cover;
+    background-position: center;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+	image-rendering: pixelated; 
+    position: fixed;
+    overflow: hidden; /* Ensure clouds don't overflow */
+  }
+  
+  .lightning-container {
+	width: 640px;
+    min-height: 440px;
+	margin: -20px;
+    /* Uncomment when you want to add a background image */
+	background-image: url('images/lightning.gif');
     background-size: cover;
     background-position: center;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
