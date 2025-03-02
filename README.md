@@ -19,7 +19,7 @@ Canvas RPG transforms your Canvas LMS experience into an exciting RPG adventure!
 
 ## Installation
 
-1. Download the extension from the Chrome Web Store (or load unpacked for development)
+1.  load unpacked for development
 2. Pin the extension to your toolbar for easy access
 3. Click the Canvas RPG icon to open the game interface
 
