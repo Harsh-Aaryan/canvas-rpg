@@ -42,6 +42,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   settingsContent = document.getElementById('settings-content');
   attackButton = document.getElementById('attack-button');
   
+  // Initialize knight
+  const knightImage = document.getElementById('knight-image');
+  if (knightImage) {
+    knightImage.classList.add('knight-idle');
+  }
+  
   // Load saved settings and game state
   await loadSettings();
   await loadGameState();
@@ -405,14 +411,21 @@ async function attackBoss() {
   gameState.bossHealth = Math.max(0, gameState.bossHealth - damage);
   gameState.xp = Math.max(0, gameState.xp - xpCost);
   
+  // Animate knight attack
+  const knightImage = document.getElementById('knight-image');
+  knightImage.classList.remove('knight-idle');
+  knightImage.classList.add('knight-attack');
+  
   // Add visual effect to boss
   const bossImage = document.getElementById('boss-image');
   bossImage.classList.add('damaged');
   
-  // Remove the effect after a short delay
+  // Remove the effects after a short delay
   setTimeout(() => {
     bossImage.classList.remove('damaged');
-  }, 500);
+    knightImage.classList.remove('knight-attack');
+    knightImage.classList.add('knight-idle');
+  }, 800);
   
   // Check if boss was defeated
   if (gameState.bossHealth <= 0) {

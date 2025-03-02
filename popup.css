@@ -322,6 +322,16 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+  }
+  
+  .boss-content {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
   /* Boss image */
@@ -336,10 +346,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto 20px;
-    position: relative;
-    top: 80px;
-    right: 0px;
+    margin: 0 auto;
+    position: absolute;
+    top: 20px;
+    right: 20px;
     image-rendering: pixelated;
   }
   
@@ -498,19 +508,20 @@ body {
     text-transform: uppercase;
     image-rendering: pixelated;
     border: 3px solid #333;
-    position: relative;
-    top: 75px;
-    right: 0px;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
   }
   
   .attack-button:hover {
     background-color: #c0392b;
-    transform: translateY(-2px);
+    transform: translateX(-50%) translateY(-2px);
     box-shadow: 0 6px 0 #a5281b;
   }
   
   .attack-button:active {
-    transform: translateY(2px);
+    transform: translateX(-50%) translateY(2px);
     box-shadow: 0 2px 0 #a5281b;
   }
   
@@ -620,5 +631,56 @@ body {
     background-color: #ecf0f1;
     color: #2c3e50;
     font-size: 14px;
+  }
+  
+  /* Knight character */
+  .knight-container {
+    position: absolute;
+    bottom: 60px;
+    left: 30px;
+    z-index: 2;
+  }
+  
+  .knight-idle {
+    width: 70px;
+    height: 70px;
+    background-image: url('images/knight.gif');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    transition: transform 0.3s ease;
+  }
+  
+  .knight-attack {
+    width: 70px;
+    height: 70px;
+    background-image: url('images/knight-attack.gif');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    animation: knight-attack-animation 0.8s forwards;
+  }
+  
+  @keyframes knight-attack-animation {
+    0% {
+      transform: translateX(0) scale(1);
+    }
+    20% {
+      transform: translateX(15px) scale(1.1) rotate(5deg);
+    }
+    40% {
+      transform: translateX(40px) scale(1.2) rotate(-5deg);
+    }
+    60% {
+      transform: translateX(60px) scale(1.3) rotate(5deg);
+    }
+    80% {
+      transform: translateX(30px) scale(1.1) rotate(-5deg);
+    }
+    100% {
+      transform: translateX(0) scale(1) rotate(0deg);
+    }
   }
   
