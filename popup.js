@@ -288,13 +288,24 @@ function renderTasks() {
     
     const questText = document.createElement('div');
     questText.className = 'quest-text';
-    questText.textContent = task.title;
+    
+    // Truncate long titles to make display more compact
+    let displayTitle = task.title;
+    if (displayTitle.length > 25) {
+      displayTitle = displayTitle.substring(0, 22) + '...';
+    }
+    questText.textContent = displayTitle;
     
     if (task.dueDate) {
       const dueDate = new Date(task.dueDate);
       const dateText = document.createElement('div');
       dateText.className = 'quest-due-date';
-      dateText.textContent = `Due: ${dueDate.toLocaleDateString()}`;
+      
+      // Format date more compactly
+      const month = dueDate.getMonth() + 1;
+      const day = dueDate.getDate();
+      dateText.textContent = `Due: ${month}/${day}`;
+      
       questText.appendChild(dateText);
     }
     
