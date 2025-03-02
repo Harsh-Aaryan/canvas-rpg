@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Canvas RPG</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="icon" href="images/icon16.png" type="image/png">
+</head>
+<body>
+  <header>
+    <h1>Canvas RPG</h1>
+    <p>Complete your tasks and defeat the boss!</p>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="lightning-container"></div>
+      <div class="tower-container"></div>
+      <div class="trees-two-container"></div>
+      <div class="trees-container"></div>
+      <div class="ground-container"></div>
+      
+      <!-- Notification container -->
+      <div id="notification-container"></div>
+      
+      <!-- Main game content -->
+      <div id="main-content" class="tab-content active">
+        <!-- Top bars section -->
+        <div class="bars-container">
+          <div class="xp-container">
+            <div class="label">XP:</div>
+            <div class="progress-bar">
+              <div id="xp-bar" class="progress-fill xp"></div>
+            </div>
+            <div id="xp-text" class="progress-text">0/100</div>
+          </div>
+          
+          <div class="boss-health-container">
+            <div class="label">Boss Health:</div>
+            <div class="progress-bar">
+              <div id="boss-health-bar" class="progress-fill health"></div>
+            </div>
+            <div id="boss-health-text" class="progress-text">100/100</div>
+          </div>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="game-area">
+          <!-- Quest section -->
+          <div class="quest-container">
+            <h2>Quests</h2>
+            <div id="quest-list">
+              <!-- Quests will be inserted here dynamically -->
+              <div class="loading">Add your quests below...</div>
+            </div>
+            
+            <!-- Task input form (new for website version) -->
+            <div class="task-form">
+              <input type="text" id="new-task" placeholder="Enter a new task...">
+              <input type="date" id="task-due-date">
+              <button id="add-task-btn">Add Task</button>
+            </div>
+          </div>
+          
+          <!-- Boss section -->
+          <div class="boss-container">
+            <div class="boss-content">
+              <div id="boss-image" class="boss-circle"></div>
+              <div id="knight-container" class="knight-container">
+                <div id="knight-image"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Control buttons -->
+        <div class="controls-container">
+          <button id="attack-button" class="attack-button">Attack Boss</button>
+          <button id="settings-button" class="settings-button">Settings</button>
+        </div>
+      </div>
+      
+      <!-- Settings content -->
+      <div id="settings-content" class="tab-content">
+        <h3>Settings</h3>
+        <div class="setting-item">
+          <label for="player-name">Player Name:</label>
+          <input type="text" id="player-name" placeholder="Enter your name">
+        </div>
+        <div class="setting-item">
+          <label for="difficulty">Difficulty:</label>
+          <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>
+            <input type="checkbox" id="sound-enabled" checked>
+            Enable Sound Effects
+          </label>
+        </div>
+        
+        <!-- Canvas API Integration -->
+        <div class="setting-section">
+          <h4>Canvas LMS Integration</h4>
+          <div class="setting-item">
+            <label for="canvas-token">Canvas API Token:</label>
+            <input type="password" id="canvas-token" placeholder="Enter your Canvas API token">
+            <p class="setting-help">Find this in your Canvas account settings under "Approved Integrations"</p>
+          </div>
+          <div class="setting-item">
+            <label for="canvas-domain">Canvas Domain:</label>
+            <input type="text" id="canvas-domain" placeholder="your-school.instructure.com">
+          </div>
+          <button id="fetch-canvas-tasks" class="secondary-button">Import Tasks from Canvas</button>
+        </div>
+        
+        <button id="save-settings" class="action-button">Save Settings</button>
+        <button id="back-button" class="back-button">← Back to Game</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Canvas RPG - A gamified task management system</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html> 

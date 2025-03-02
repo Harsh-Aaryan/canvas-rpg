@@ -1,0 +1,1237 @@
+/* Base styles */
+body {
+  font-family: 'Press Start 2P', cursive;
+  margin: 0;
+  padding: 0;
+  background-color: #2c3e50;
+  color: white;
+  line-height: 1.6;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  min-height: 100vh; /* Ensure full height */
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: #1a2530;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #f39c12;
+  text-shadow: 2px 2px 0 #000;
+}
+
+header p {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #ecf0f1;
+}
+
+main {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: 60px; /* Space for footer */
+}
+
+footer {
+  background-color: #1a2530;
+  padding: 10px;
+  text-align: center;
+  font-size: 10px;
+  color: #7f8c8d;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.container {
+  width: 800px;
+  height: 500px;
+  padding: 20px;
+  background-color: #000000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  image-rendering: pixelated; 
+  position: relative;
+  overflow: visible;
+  margin: 0 auto;
+  max-width: 100%; /* Ensure it doesn't overflow on small screens */
+  box-sizing: border-box;
+}
+
+.tower-container, .trees-container, .trees-two-container, .ground-container, .lightning-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+/* Parallax clouds layer */
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-image: url('../images/clouds.png');
+  background-repeat: repeat-x;
+  background-position: 0 40px;
+  background-size: auto 400px;
+  opacity: 0.8;
+  z-index: 0;
+  animation: cloudMove 80s linear infinite;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* Add a second cloud layer for depth */
+.container::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-image: url('../images/clouds.png');
+  background-repeat: repeat-x;
+  background-position: 0 10px;
+  background-size: auto 200px;
+  opacity: 0.5;
+  z-index: 0;
+  animation: cloudMove 120s linear infinite;
+  image-rendering: pixelated;
+  pointer-events: none;
+  transform: scaleX(-1);
+}
+
+/* Parallax towers layer */
+.tower-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-image: url('../images/towers.png');
+  background-repeat: repeat-x;
+  background-position: 0 90px;
+  background-size: auto 250px;
+  opacity: 1;
+  z-index: 0;
+  animation: cloudMove 180s linear infinite;
+  image-rendering: pixelated;
+  filter: brightness(0.25);
+  pointer-events: none;
+}
+
+/* Parallax trees layer */
+.trees-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-image: url('../images/trees.png');
+  background-repeat: repeat-x;
+  background-position: 0 160px;
+  background-size: auto 200px;
+  opacity: 1;
+  z-index: 0;
+  animation: cloudMove 100s linear infinite;
+  image-rendering: pixelated;
+  filter: brightness(0.75);
+  pointer-events: none;
+}
+
+/* Parallax trees-2 layer */
+.trees-two-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-image: url('../images/trees-2.png');
+  background-repeat: repeat-x;
+  background-position: 0 140px;
+  background-size: auto 200px;
+  opacity: 1;
+  z-index: 0;
+  animation: cloudMove 140s linear infinite;
+  image-rendering: pixelated;
+  filter: brightness(0.5);
+  pointer-events: none;
+}
+
+/* Cloud animation */
+@keyframes cloudMove {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ground-container {
+  background-image: url('../images/ground.png');
+  background-size: cover;
+  background-position: center bottom;
+  z-index: 0;
+}
+
+.lightning-container {
+  background-image: url('../images/lightning.gif');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.7;
+  z-index: 0;
+}
+
+/* Ensure all content is above clouds */
+.bars-container, .game-area, .settings-button, #notification-container, #settings-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Progress bars styling */
+.bars-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* XP and boss health bars - ensure they're identical in size and structure */
+.xp-container, .boss-health-container {
+  width: 45%;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #fff;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+}
+
+/* Unified progress bar styling for both bars */
+.progress-bar {
+  height: 20px;
+  background-color: #333;
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+  border: 2px solid #111;
+  box-sizing: border-box;
+}
+
+/* XP bar fill - blue theme */
+.progress-fill.xp {
+  height: 100%;
+  background: linear-gradient(to right, #3498db, #2980b9);
+  width: 0%;
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+  transition: width 0.3s ease-in-out;
+}
+
+/* Health bar fill - red theme */
+.progress-fill.health {
+  height: 100%;
+  background: linear-gradient(to right, #e74c3c, #c0392b);
+  width: 100%;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
+  transition: width 0.3s ease-in-out;
+}
+
+.progress-text {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  font-family: 'Press Start 2P', cursive;
+}
+
+/* Game area styling */
+.game-area {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  height: 320px;
+  margin-bottom: 40px;
+}
+
+/* Quest container as scroll */
+.quest-container {
+  width: 48%;
+  background-color: #f8e7c9;
+  border-radius: 5px;
+  padding: 15px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  max-height: 320px;
+  overflow-y: auto;
+  border: 4px solid #8b5a2b;
+  position: relative;
+  image-rendering: pixelated;
+}
+
+.quest-container::before, .quest-container::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  left: 0;
+  background-color: #8b5a2b;
+  image-rendering: pixelated;
+}
+
+.quest-container::before {
+  top: 0;
+  border-bottom: 2px solid #6b4423;
+}
+
+.quest-container::after {
+  bottom: 0;
+  border-top: 2px solid #6b4423;
+}
+
+.quest-container h2 {
+  margin-top: 10px;
+  color: #8b5a2b;
+  text-align: center;
+  border-bottom: 2px dashed #8b5a2b;
+  padding-bottom: 8px;
+  font-family: 'Press Start 2P', cursive;
+  position: relative;
+  z-index: 1;
+}
+
+/* Task input form */
+.task-form {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #e6d5b8;
+  border-radius: 5px;
+  border: 2px solid #8b5a2b;
+  z-index: 2;
+  position: relative;
+}
+
+.task-form input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 2px solid #8b5a2b;
+  background-color: #f8e7c9;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  color: #5e3a19;
+}
+
+.task-form input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 2px solid #8b5a2b;
+  background-color: #f8e7c9;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  color: #5e3a19;
+}
+
+.task-form button {
+  width: 100%;
+  padding: 8px;
+  background-color: #8b5a2b;
+  color: #f8e7c9;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  transition: background-color 0.3s;
+}
+
+.task-form button:hover {
+  background-color: #6b4423;
+}
+
+/* Quest items on scroll */
+.quest-item {
+  background-color: transparent;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 0;
+  border-left: 4px solid #8b5a2b;
+  display: flex;
+  align-items: center;
+  color: #5e3a19;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+}
+
+.quest-item input[type="checkbox"] {
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: 2px solid #8b5a2b;
+  position: relative;
+}
+
+.quest-item input[type="checkbox"]:checked {
+  background-color: #8b5a2b;
+}
+
+.quest-item input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  color: #f8e7c9;
+  font-size: 14px;
+  top: -2px;
+  left: 2px;
+}
+
+.quest-item.completed {
+  text-decoration: line-through;
+  opacity: 0.7;
+  border-left-color: #8b5a2b;
+}
+
+.loading {
+  text-align: center;
+  color: #8b5a2b;
+  font-style: italic;
+  padding: 20px 0;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+}
+
+/* Boss container */
+.boss-container {
+  width: 48%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 320px;
+}
+
+.boss-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Boss image */
+.boss-circle {
+  width: 120px;
+  height: 120px;
+  background-image: url('../images/dragon.gif');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute; /* Changed from fixed to absolute */
+  bottom: 25%;
+  right: 15%;
+  image-rendering: pixelated;
+  z-index: 1;
+}
+
+/* Boss damage animation */
+.boss-circle.damaged {
+  animation: damage-flash 0.5s;
+}
+
+@keyframes damage-flash {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.1);
+    filter: brightness(1.5) sepia(1) hue-rotate(-50deg) saturate(5);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+/* Settings section */
+.settings-section {
+  background-color: rgba(44, 62, 80, 0.7);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.settings-section h3 {
+  margin-top: 0;
+  color: #e74c3c;
+  border-bottom: 2px solid #e74c3c;
+  padding-bottom: 8px;
+}
+
+.setting-section {
+  background-color: rgba(44, 62, 80, 0.7);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.setting-section h4 {
+  margin-top: 0;
+  color: #f39c12;
+  border-bottom: 1px solid #f39c12;
+  padding-bottom: 8px;
+  font-size: 14px;
+}
+
+.setting-item {
+  margin-bottom: 15px;
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 5px;
+  color: #ecf0f1;
+}
+
+.setting-help {
+  font-size: 8px;
+  color: #bdc3c7;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.setting-item input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+}
+
+.setting-item select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+}
+
+button {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #27ae60;
+}
+
+.secondary-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 10px;
+  margin-top: 10px;
+  font-family: 'Press Start 2P', cursive;
+  transition: background-color 0.3s;
+}
+
+.secondary-button:hover {
+  background-color: #2980b9;
+}
+
+/* Settings button */
+.settings-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+  font-family: 'Press Start 2P', cursive;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 0 #2980b9;
+  text-transform: uppercase;
+  image-rendering: pixelated;
+  border: 2px solid #333;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.settings-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #1a5276;
+}
+
+.settings-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #1a5276;
+}
+
+/* Back button */
+.back-button {
+  background-color: #7f8c8d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.back-button:hover {
+  background-color: #95a5a6;
+  transform: scale(1.05);
+}
+
+/* Action button (for save settings) */
+.action-button {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  display: block;
+  width: 100%;
+}
+
+.action-button:hover {
+  background-color: #27ae60;
+  transform: scale(1.02);
+}
+
+/* Tab content */
+.tab-content {
+  display: none;
+  position: relative;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* 8-bit Attack button */
+.attack-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 0 #c0392b;
+  font-family: 'Press Start 2P', cursive;
+  text-transform: uppercase;
+  image-rendering: pixelated;
+  border: 2px solid #333;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.attack-button:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #a5281b;
+}
+
+.attack-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #a5281b;
+}
+
+/* Add pixel corners to progress bars for 8-bit style */
+.progress-bar {
+  position: relative;
+}
+
+/* Create the pixel corners using pseudo-elements */
+.progress-bar:before, 
+.progress-bar:after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #111;
+  z-index: 2;
+}
+
+/* Top-left corner */
+.progress-bar:before {
+  top: -2px;
+  left: -2px;
+}
+
+/* Top-right corner */
+.progress-bar:after {
+  top: -2px;
+  right: -2px;
+}
+
+/* Add bottom corners using additional pseudo-elements */
+.xp-container .progress-bar:before,
+.boss-health-container .progress-bar:before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #111;
+  bottom: -2px;
+  left: -2px;
+  z-index: 2;
+}
+
+.xp-container .progress-bar:after,
+.boss-health-container .progress-bar:after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #111;
+  bottom: -2px;
+  right: -2px;
+  z-index: 2;
+}
+
+/* Add damage flash animation to boss health bar */
+@keyframes health-damage-flash {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.health-damage {
+  animation: health-damage-flash 0.3s ease-in-out;
+}
+
+/* Notification system */
+#notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 200px;
+  pointer-events: none;
+}
+
+.notification {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.3s, transform 0.3s;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border-left: 3px solid #e74c3c;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.notification.damage {
+  border-left-color: #e74c3c;
+}
+
+.notification.xp {
+  border-left-color: #3498db;
+}
+
+.notification.warning {
+  border-left-color: #f39c12;
+}
+
+.notification.success {
+  border-left-color: #2ecc71;
+}
+
+.notification.info {
+  border-left-color: #9b59b6;
+}
+
+/* Settings content */
+#settings-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #34495e;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#settings-content h3 {
+  color: #f39c12;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+/* Knight character */
+.knight-container {
+  position: absolute; /* Changed from fixed to absolute */
+  bottom: 28%;
+  right: 28%;
+  z-index: 1;
+}
+
+.knight-idle {
+  width: 80px;
+  height: 80px;
+  background-image: url('../images/knight.gif');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  transition: transform 0.3s ease;
+}
+
+.knight-alt {
+  width: 80px;
+  height: 80px;
+  background-image: url('../images/knight-alt.gif');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  animation: knight-alt-animation 1.5s forwards;
+}
+
+.knight-attack {
+  width: 80px;
+  height: 80px;
+  background-image: url('../images/knight-attack.gif');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  animation: knight-attack-animation 0.8s forwards;
+}
+
+@keyframes knight-alt-animation {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.05);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes knight-attack-animation {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  25% {
+    transform: translateX(10px) scale(1.1);
+  }
+  50% {
+    transform: translateX(20px) scale(1.2);
+  }
+  75% {
+    transform: translateX(10px) scale(1.1);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Main content area */
+#main-content {
+  position: relative;
+  height: 100%;
+  z-index: 5;
+}
+
+/* Controls container */
+.controls-container {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+/* Responsive styles */
+@media (max-width: 900px) {
+  .container {
+    width: 100%;
+    height: auto;
+    min-height: 600px;
+    padding: 15px;
+  }
+  
+  .game-area {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .quest-container, .boss-container {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .boss-container {
+    height: 250px; /* Increased height for better visibility */
+  }
+  
+  .boss-circle {
+    position: absolute;
+    bottom: 50%; /* Center vertically */
+    right: 60%; /* Position to the left */
+    transform: translateY(50%);
+    width: 100px; /* Slightly smaller */
+    height: 100px;
+  }
+  
+  .knight-container {
+    position: absolute;
+    bottom: 50%; /* Center vertically */
+    right: 20%; /* Position to the right */
+    transform: translateY(50%);
+    margin-top: 0;
+  }
+  
+  .controls-container {
+    position: relative;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .attack-button, .settings-button {
+    width: 100%;
+  }
+  
+  header h1 {
+    font-size: 20px;
+  }
+  
+  header p {
+    font-size: 10px;
+  }
+  
+  .tower-container::before {
+    background-position: 0 150px;
+    background-size: auto 200px;
+  }
+  
+  .trees-container::before {
+    background-position: 0 200px;
+    background-size: auto 150px;
+  }
+  
+  .trees-two-container::before {
+    background-position: 0 180px;
+    background-size: auto 150px;
+  }
+  
+  .container::before {
+    background-position: 0 60px;
+    background-size: auto 300px;
+  }
+  
+  .container::after {
+    background-position: 0 30px;
+    background-size: auto 150px;
+  }
+}
+
+/* Additional breakpoint for smaller phones */
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+    min-height: 500px;
+  }
+  
+  .boss-circle {
+    width: 80px;
+    height: 80px;
+    right: 65%;
+  }
+  
+  .knight-container {
+    right: 15%;
+  }
+  
+  .knight-idle, .knight-alt, .knight-attack {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .bars-container {
+    flex-direction: column;
+  }
+  
+  .xp-container, .boss-health-container {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .quest-container {
+    max-height: 200px;
+  }
+  
+  .task-form input[type="text"],
+  .task-form input[type="date"] {
+    padding: 6px;
+    font-size: 7px;
+  }
+  
+  .task-form button {
+    padding: 6px;
+    font-size: 8px;
+  }
+  
+  .quest-item {
+    font-size: 8px;
+    padding: 8px;
+  }
+  
+  header h1 {
+    font-size: 16px;
+  }
+  
+  header p {
+    font-size: 8px;
+  }
+  
+  .tower-container::before {
+    background-position: 0 200px;
+    background-size: auto 150px;
+  }
+  
+  .trees-container::before {
+    background-position: 0 250px;
+    background-size: auto 100px;
+  }
+  
+  .trees-two-container::before {
+    background-position: 0 230px;
+    background-size: auto 100px;
+  }
+  
+  .setting-section h4 {
+    font-size: 12px;
+  }
+  
+  .setting-help {
+    font-size: 6px;
+  }
+  
+  .secondary-button {
+    font-size: 8px;
+    padding: 6px 12px;
+  }
+}
+
+/* Fix for landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .container {
+    height: auto;
+    min-height: 400px;
+  }
+  
+  .game-area {
+    flex-direction: row;
+    height: auto;
+    min-height: 250px;
+  }
+  
+  .quest-container, .boss-container {
+    width: 48%;
+    height: 250px;
+  }
+  
+  .boss-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .boss-circle {
+    position: absolute;
+    bottom: 50%;
+    right: 60%;
+    transform: translate(0, 50%);
+  }
+  
+  .knight-container {
+    position: absolute;
+    bottom: 50%;
+    right: 20%;
+    transform: translate(0, 50%);
+  }
+  
+  .quest-container {
+    max-height: 250px;
+  }
+  
+  footer {
+    position: relative;
+    margin-top: 20px;
+  }
+  
+  main {
+    padding-bottom: 0;
+  }
+}
+
+/* Modal dialog for manual import */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #34495e;
+  border-radius: 10px;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  color: #f39c12;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.modal-instructions {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  color: #ecf0f1;
+}
+
+.modal-content textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #2c3e50;
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  resize: vertical;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  flex: 1;
+}
+
+/* Responsive styles for modal */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 15px;
+    width: 95%;
+  }
+  
+  .modal-content h3 {
+    font-size: 16px;
+  }
+  
+  .modal-instructions {
+    font-size: 10px;
+  }
+  
+  .modal-content textarea {
+    font-size: 12px;
+    padding: 8px;
+  }
+  
+  .modal-buttons {
+    flex-direction: column;
+  }
+} 
