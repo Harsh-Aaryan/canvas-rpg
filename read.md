@@ -22,3 +22,11 @@ XP: Gain XP from completing quests.  Use XP by attacking the boss, dealing a ran
 ATT
 
 
+ Mr knight (tugstun)
+
+
+
+Added 10 different time-based challenge dialogues
+Challenges appear every 15-30 minutes
+Each challenge offers a random time frame (15, 20, 30, 45, or 60 minutes)
+Challenges promise rewards like double XP, bonus loot, or critical hit bonuses
