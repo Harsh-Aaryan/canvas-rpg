@@ -24,6 +24,8 @@ let settingsTab;
 let mainContent;
 let settingsContent;
 let attackButton;
+let knightIdleAnimationTimer; // Timer for random knight animations
+let isKnightAnimating = false; // Flag to track if knight is currently in an animation
 
 // Initialize the extension
 document.addEventListener('DOMContentLoaded', async () => {
@@ -48,6 +50,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const knightImage = document.getElementById('knight-image');
   if (knightImage) {
     knightImage.classList.add('knight-idle');
+    // Start the random knight animation cycle
+    startRandomKnightAnimations();
   }
   
   // Load saved settings and game state
@@ -414,13 +418,66 @@ function showNotification(message, type = 'damage', duration = 1500) {
   gameState.lastNotificationTime = Date.now();
 }
 
+// Function to start random knight animations
+function startRandomKnightAnimations() {
+  // Clear any existing timer
+  if (knightIdleAnimationTimer) {
+    clearTimeout(knightIdleAnimationTimer);
+  }
+  
+  // Set a new random timer (1-10 seconds)
+  const randomDelay = Math.floor(Math.random() * 9000) + 1000; // 1000-10000ms
+  
+  knightIdleAnimationTimer = setTimeout(() => {
+    // Only play the animation if the knight is not already animating
+    if (!isKnightAnimating) {
+      playKnightAltAnimation();
+    }
+    
+    // Restart the cycle
+    startRandomKnightAnimations();
+  }, randomDelay);
+}
+
+// Function to play the knight-alt animation
+function playKnightAltAnimation() {
+  const knightImage = document.getElementById('knight-image');
+  if (!knightImage) return;
+  
+  // Set the animating flag
+  isKnightAnimating = true;
+  
+  // Remove idle class and add alt animation class
+  knightImage.classList.remove('knight-idle');
+  knightImage.classList.add('knight-alt');
+  
+  // After animation completes, return to idle state
+  setTimeout(() => {
+    knightImage.classList.remove('knight-alt');
+    knightImage.classList.add('knight-idle');
+    isKnightAnimating = false;
+  }, 1500); // Match the animation duration in CSS
+}
+
 // Attack boss function
 async function attackBoss() {
   console.log('Attack boss function called');
   
+  // Clear any pending idle animations when attacking
+  if (knightIdleAnimationTimer) {
+    clearTimeout(knightIdleAnimationTimer);
+  }
+  
+  // Set the animating flag
+  isKnightAnimating = true;
+  
   if (gameState.xp < 5) { // Reduced from 10 to 5 to allow more attacks
     // Always show warning when out of XP
     showNotification('Not enough XP to attack!', 'warning', 2000);
+    
+    // Reset animation flag and restart random animations
+    isKnightAnimating = false;
+    startRandomKnightAnimations();
     return;
   }
   
@@ -441,6 +498,7 @@ async function attackBoss() {
   // Animate knight attack
   const knightImage = document.getElementById('knight-image');
   knightImage.classList.remove('knight-idle');
+  knightImage.classList.remove('knight-alt'); // Also remove alt animation if it's active
   knightImage.classList.add('knight-attack');
   
   // Add visual effect to boss
@@ -457,6 +515,10 @@ async function attackBoss() {
     bossHealthBar.classList.remove('health-damage');
     knightImage.classList.remove('knight-attack');
     knightImage.classList.add('knight-idle');
+    
+    // Reset animation flag and restart random animations
+    isKnightAnimating = false;
+    startRandomKnightAnimations();
   }, 800);
   
   // Check if boss was defeated

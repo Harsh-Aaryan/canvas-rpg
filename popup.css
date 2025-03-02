@@ -783,6 +783,17 @@ body {
     transition: transform 0.3s ease;
   }
   
+  .knight-alt {
+    width: 80px;
+    height: 80px;
+    background-image: url('images/knight-alt.gif');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    animation: knight-alt-animation 1.5s forwards;
+  }
+  
   .knight-attack { /*0.575*/
     width: 80px;
     height: 80px;
@@ -792,6 +803,18 @@ body {
     background-repeat: no-repeat;
     image-rendering: pixelated;
     animation: knight-attack-animation 0.8s forwards;
+  }
+  
+  @keyframes knight-alt-animation {
+    0% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-5px) scale(1.05);
+    }
+    100% {
+      transform: translateY(0) scale(1);
+    }
   }
   
   @keyframes knight-attack-animation {

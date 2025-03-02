@@ -68,8 +68,11 @@ window.addEventListener('load', () => {
       background-repeat: no-repeat;
       image-rendering: pixelated;
       transition: transform 0.3s;
-      transform-origin: bottom center;
     `;
+    
+    // Variables for knight animation
+    let knightIdleAnimationTimer;
+    let isKnightAnimating = false;
     
     // Create dialogue bubble
     const dialogueBubble = document.createElement('div');
@@ -176,8 +179,20 @@ window.addEventListener('load', () => {
         100% { transform: translateY(0); }
       }
       
+      @keyframes knight-alt-animation {
+        0% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-3px) scale(1.05); }
+        100% { transform: translateY(0) scale(1); }
+      }
+      
       #canvas-rpg-knight {
         animation: knight-idle 1.5s infinite ease-in-out;
+      }
+      
+      /* Knight alt animation class */
+      .knight-alt {
+        animation: knight-alt-animation 1.5s forwards !important;
+        background-image: url('${chrome.runtime.getURL('images/knight-alt.gif')}') !important;
       }
       
       /* Prevent idle animation during attack */
@@ -195,7 +210,14 @@ window.addEventListener('load', () => {
     // Add click event to open the popup and show attack animation
     indicator.addEventListener('click', () => {
       // Show attack animation
+      knight.classList.remove('knight-alt'); // Remove alt animation if active
       knight.classList.add('knight-attacking');
+      
+      // Clear any idle animation timer during attack
+      if (knightIdleAnimationTimer) {
+        clearTimeout(knightIdleAnimationTimer);
+      }
+      isKnightAnimating = true;
       
       // Show attack dialogue
       showDialogue("For glory and XP!");
@@ -204,6 +226,10 @@ window.addEventListener('load', () => {
       setTimeout(() => {
         knight.classList.remove('knight-attacking');
         hideDialogue();
+        
+        // Reset animation state and restart random animations
+        isKnightAnimating = false;
+        startRandomKnightAnimations();
         
         // Open the popup
         chrome.runtime.sendMessage({ action: 'openPopup' });
@@ -215,12 +241,18 @@ window.addEventListener('load', () => {
     
     // Add hover effect
     indicator.addEventListener('mouseover', () => {
-      knight.style.transform = 'scale(1.1)';
+      // Only apply hover effect if not in an animation
+      if (!isKnightAnimating) {
+        knight.style.transform = 'scale(1.1)';
+      }
       showDialogue(getRandomDialogue());
     });
     
     indicator.addEventListener('mouseout', () => {
-      knight.style.transform = 'scale(1)';
+      // Only reset transform if not in an animation
+      if (!isKnightAnimating) {
+        knight.style.transform = 'scale(1)';
+      }
       hideDialogue();
     });
     
@@ -229,6 +261,9 @@ window.addEventListener('load', () => {
     
     // Start random dialogue intervals
     startRandomDialogues();
+    
+    // Start random knight animations
+    startRandomKnightAnimations();
     
     // Simulate level up occasionally (every 5-10 minutes)
     setInterval(() => {
@@ -356,4 +391,42 @@ window.addEventListener('load', () => {
       showDialogue(getRandomChallengeDialogue());
       setTimeout(hideDialogue, 8000);
     }, Math.random() * 900000 + 900000); // 15-30 minutes
+  }
+  
+  // Start random knight animations
+  function startRandomKnightAnimations() {
+    // Clear any existing timer
+    if (knightIdleAnimationTimer) {
+      clearTimeout(knightIdleAnimationTimer);
+    }
+    
+    // Set a new random timer (1-10 seconds)
+    const randomDelay = Math.floor(Math.random() * 9000) + 1000; // 1000-10000ms
+    
+    knightIdleAnimationTimer = setTimeout(() => {
+      // Only play the animation if the knight is not already animating
+      if (!isKnightAnimating) {
+        playKnightAltAnimation();
+      }
+      
+      // Restart the cycle
+      startRandomKnightAnimations();
+    }, randomDelay);
+  }
+  
+  // Function to play the knight-alt animation
+  function playKnightAltAnimation() {
+    if (!knight) return;
+    
+    // Set the animating flag
+    isKnightAnimating = true;
+    
+    // Add alt animation class
+    knight.classList.add('knight-alt');
+    
+    // After animation completes, return to idle state
+    setTimeout(() => {
+      knight.classList.remove('knight-alt');
+      isKnightAnimating = false;
+    }, 1500); // Match the animation duration in CSS
   }

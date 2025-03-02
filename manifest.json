@@ -26,7 +26,7 @@
     ],
     "web_accessible_resources": [
       {
-        "resources": ["images/knight.gif", "images/knight-attack.gif"],
+        "resources": ["images/knight.gif", "images/knight-attack.gif", "images/knight-alt.gif"],
         "matches": ["*://*.instructure.com/*"]
       }
     ]
