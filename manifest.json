@@ -23,5 +23,11 @@
         "matches": ["*://*.instructure.com/*"],
         "js": ["content.js"]
       }
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": ["images/knight.gif", "images/knight-attack.gif"],
+        "matches": ["*://*.instructure.com/*"]
+      }
     ]
   }

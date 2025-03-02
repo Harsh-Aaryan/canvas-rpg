@@ -1,7 +1,7 @@
 // state for games 
 let gameState = {
   xp: 0,
-  maxXp: 100,
+  maxXp: 80,
   level: 1,
   bossHealth: 100,
   maxBossHealth: 100,
@@ -328,14 +328,18 @@ async function toggleTaskCompletion(taskId) {
     
     if (task.completed) {
       // Task was completed, add XP only
-      const xpGained = 10;
+      const xpGained = 15;
       gameState.xp += xpGained;
       
       // Check if player leveled up
       if (gameState.xp >= gameState.maxXp) {
+        // Level up and keep excess XP
+        const excessXp = gameState.xp - gameState.maxXp;
         gameState.level++;
-        gameState.xp = gameState.xp - gameState.maxXp;
-        gameState.maxXp = Math.floor(gameState.maxXp * 1.5);
+        // Only increase max XP by 25% instead of 50% to make leveling easier
+        gameState.maxXp = Math.floor(gameState.maxXp * 1.25);
+        // Keep the excess XP for the next level
+        gameState.xp = excessXp;
         showNotification(`Level up! You are now level ${gameState.level}!`, 'success', 3000);
       } else {
         // Only show XP gain notification occasionally
@@ -414,16 +418,19 @@ function showNotification(message, type = 'damage', duration = 1500) {
 async function attackBoss() {
   console.log('Attack boss function called');
   
-  if (gameState.xp < 10) {
+  if (gameState.xp < 5) { // Reduced from 10 to 5 to allow more attacks
     // Always show warning when out of XP
     showNotification('Not enough XP to attack!', 'warning', 2000);
     return;
   }
   
-  // Calculate random damage between 5-15
-  const damage = Math.floor(Math.random() * 11) + 5;
-  // Calculate random XP cost between 5-10
-  const xpCost = Math.floor(Math.random() * 6) + 5;
+  // Calculate damage based on level (5-15 base damage + level bonus)
+  const baseDamage = Math.floor(Math.random() * 11) + 5;
+  const levelBonus = Math.floor(gameState.level * 0.5); // Small bonus per level
+  const damage = baseDamage + levelBonus;
+  
+  // Calculate random XP cost between 3-8 (reduced from 5-10)
+  const xpCost = Math.floor(Math.random() * 6) + 3;
   
   console.log(`Dealing ${damage} damage to boss, costing ${xpCost} XP`);
   
@@ -440,9 +447,14 @@ async function attackBoss() {
   const bossImage = document.getElementById('boss-image');
   bossImage.classList.add('damaged');
   
+  // Add visual effect to boss health bar
+  const bossHealthBar = document.getElementById('boss-health-bar');
+  bossHealthBar.classList.add('health-damage');
+  
   // Remove the effects after a short delay
   setTimeout(() => {
     bossImage.classList.remove('damaged');
+    bossHealthBar.classList.remove('health-damage');
     knightImage.classList.remove('knight-attack');
     knightImage.classList.add('knight-idle');
   }, 800);
@@ -451,8 +463,24 @@ async function attackBoss() {
   if (gameState.bossHealth <= 0) {
     gameState.bossHealth = 0;
     showNotification('Boss defeated! A new boss will appear soon!', 'success', 3000);
+    
+    // Award bonus XP for defeating the boss
+    const bossDefeatXP = 20 + (gameState.level * 5);
+    gameState.xp += bossDefeatXP;
+    showNotification(`Gained ${bossDefeatXP} bonus XP for defeating the boss!`, 'xp', 2000);
+    
+    // Check if player leveled up from boss defeat bonus
+    if (gameState.xp >= gameState.maxXp) {
+      const excessXp = gameState.xp - gameState.maxXp;
+      gameState.level++;
+      gameState.maxXp = Math.floor(gameState.maxXp * 1.25);
+      gameState.xp = excessXp;
+      showNotification(`Level up! You are now level ${gameState.level}!`, 'success', 3000);
+    }
+    
     setTimeout(() => {
-      gameState.bossHealth = gameState.maxBossHealth = Math.floor(gameState.maxBossHealth * 1.5);
+      // New boss has more health based on player level
+      gameState.bossHealth = gameState.maxBossHealth = Math.floor(gameState.maxBossHealth * 1.3);
       updateProgressBars();
     }, 3000);
   } else {

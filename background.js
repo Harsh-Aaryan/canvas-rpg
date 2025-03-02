@@ -7,12 +7,13 @@ chrome.runtime.onInstalled.addListener(() => {
     // Initialize default game state
     const defaultGameState = {
       xp: 0,
-      maxXp: 100,
+      maxXp: 80, // Reduced from 100 to make leveling easier
       level: 1,
       bossHealth: 100,
       maxBossHealth: 100,
       tasks: [],
-      completedTasks: []
+      completedTasks: [],
+      lastNotificationTime: 0 // Track when the last notification was shown
     };
     
     // Save initial game state
@@ -55,7 +56,7 @@ chrome.runtime.onInstalled.addListener(() => {
         return { success: false, message: 'Game state not found' };
       }
       
-      // Check if player has enough XP
+      // Check if player has enough XP (reduced minimum)
       if (gameState.xp < xpCost) {
         return { 
           success: false, 
@@ -69,15 +70,29 @@ chrome.runtime.onInstalled.addListener(() => {
       
       // Check if boss was defeated
       let bossDefeated = false;
+      let bonusXp = 0;
+      
       if (gameState.bossHealth <= 0) {
         gameState.bossHealth = 0;
         bossDefeated = true;
+        
+        // Award bonus XP for defeating the boss
+        bonusXp = 20 + (gameState.level * 5);
+        gameState.xp += bonusXp;
+        
+        // Check if player leveled up from boss defeat bonus
+        if (gameState.xp >= gameState.maxXp) {
+          const excessXp = gameState.xp - gameState.maxXp;
+          gameState.level++;
+          gameState.maxXp = Math.floor(gameState.maxXp * 1.25);
+          gameState.xp = excessXp;
+        }
         
         // Schedule a new boss after a delay
         setTimeout(async () => {
           const updatedData = await chrome.storage.sync.get('gameState');
           const currentState = updatedData.gameState;
-          currentState.bossHealth = currentState.maxBossHealth = Math.floor(currentState.maxBossHealth * 1.5);
+          currentState.bossHealth = currentState.maxBossHealth = Math.floor(currentState.maxBossHealth * 1.3);
           await chrome.storage.sync.set({ gameState: currentState });
         }, 3000);
       }
@@ -90,6 +105,7 @@ chrome.runtime.onInstalled.addListener(() => {
         damage, 
         xpCost, 
         bossDefeated,
+        bonusXp,
         gameState
       };
     } catch (error) {
