@@ -440,9 +440,14 @@ async function attackBoss() {
   const bossImage = document.getElementById('boss-image');
   bossImage.classList.add('damaged');
   
+  // Add visual effect to boss health bar
+  const bossHealthBar = document.getElementById('boss-health-bar');
+  bossHealthBar.classList.add('health-damage');
+  
   // Remove the effects after a short delay
   setTimeout(() => {
     bossImage.classList.remove('damaged');
+    bossHealthBar.classList.remove('health-damage');
     knightImage.classList.remove('knight-attack');
     knightImage.classList.add('knight-idle');
   }, 800);
