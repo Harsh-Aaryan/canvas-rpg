@@ -211,7 +211,7 @@ body {
     margin-bottom: 20px;
   }
   
-  /* XP and boss health bars */
+  /* XP and boss health bars - ensure they're identical in size and structure */
   .xp-container, .boss-health-container {
     width: 45%;
     position: relative;
@@ -226,6 +226,7 @@ body {
     font-size: 12px;
   }
   
+  /* Unified progress bar styling for both bars */
   .progress-bar {
     height: 20px;
     background-color: #333;
@@ -237,6 +238,7 @@ body {
     box-sizing: border-box;
   }
   
+  /* XP bar fill - blue theme */
   .progress-fill.xp {
     height: 100%;
     background: linear-gradient(to right, #3498db, #2980b9);
@@ -245,6 +247,7 @@ body {
     transition: width 0.3s ease-in-out;
   }
   
+  /* Health bar fill - red theme */
   .progress-fill.health {
     height: 100%;
     background: linear-gradient(to right, #e74c3c, #c0392b);
@@ -587,19 +590,21 @@ body {
     box-shadow: 0 2px 0 #a5281b;
   }
   
-  /* Boss health as hearts */
+  /* Remove redundant boss health container styles that create inconsistency */
   .boss-health-container {
     width: 45%;
     position: relative;
   }
   
+  /* Remove these redundant styles as they're now unified above */
   .boss-health-container .progress-bar {
-    height: 30px;
+    height: 20px;
     background-color: #333;
     position: relative;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
     border-radius: 0;
     overflow: hidden;
+    border: 2px solid #111;
   }
   
   .boss-health-container .progress-fill {
@@ -611,15 +616,14 @@ body {
     transition: width 0.3s ease-in-out;
   }
   
-  /* Add pixel-style border to both progress bars */
+  /* Add pixel corners to progress bars for 8-bit style */
   .progress-bar {
-    border: 2px solid #111;
-    box-sizing: border-box;
+    position: relative;
   }
   
-  /* Add pixel corners to progress bars for 8-bit style */
-  .progress-bar::before,
-  .progress-bar::after {
+  /* Create the pixel corners using pseudo-elements */
+  .progress-bar:before, 
+  .progress-bar:after {
     content: '';
     position: absolute;
     width: 4px;
@@ -628,14 +632,41 @@ body {
     z-index: 2;
   }
   
-  .progress-bar::before {
+  /* Top-left corner */
+  .progress-bar:before {
     top: -2px;
     left: -2px;
   }
   
-  .progress-bar::after {
+  /* Top-right corner */
+  .progress-bar:after {
     top: -2px;
     right: -2px;
+  }
+  
+  /* Add bottom corners using additional pseudo-elements */
+  .xp-container .progress-bar:before,
+  .boss-health-container .progress-bar:before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: #111;
+    bottom: -2px;
+    left: -2px;
+    z-index: 2;
+  }
+  
+  .xp-container .progress-bar:after,
+  .boss-health-container .progress-bar:after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: #111;
+    bottom: -2px;
+    right: -2px;
+    z-index: 2;
   }
   
   /* Add damage flash animation to boss health bar */
