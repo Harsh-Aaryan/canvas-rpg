@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   settingsContent = document.getElementById('settings-content');
   attackButton = document.getElementById('attack-button');
   
+  console.log('Attack button element:', attackButton); // Debug log
+  
   // Initialize knight
   const knightImage = document.getElementById('knight-image');
   if (knightImage) {
@@ -73,8 +75,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   settingsTab?.addEventListener('click', () => switchTab('settings'));
   
   // Attack button - make sure to use the attackButton variable we initialized above
-  attackButton.addEventListener('click', attackBoss);
-  console.log('Attack button event listener added');
+  if (attackButton) {
+    attackButton.addEventListener('click', function(e) {
+      console.log('Attack button clicked!', e);
+      attackBoss();
+    });
+    console.log('Attack button event listener added');
+  } else {
+    console.error('Attack button element not found!');
+  }
   
   // Settings button opens settings tab
   settingsButton.addEventListener('click', () => switchTab('settings'));

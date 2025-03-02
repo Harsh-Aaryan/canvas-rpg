@@ -3,10 +3,10 @@
 <head>
   <title>Canvas RPG</title>
   <link rel="stylesheet" href="popup.css">
-</head>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
 <body>
   <div class="container">
 	<div class="tower-container"></div>
@@ -50,20 +50,19 @@
         <!-- Boss section -->
         <div class="boss-container">
           <div class="boss-content">
-            <div id="boss-image" class="boss-circle">
-              <!-- 8-bit boss is now created with CSS -->
-            </div>
+            <div id="boss-image" class="boss-circle"></div>
             <div id="knight-container" class="knight-container">
-              <!-- Knight character -->
-              <div id="knight-image" class="knight-idle"></div>
+              <div id="knight-image"></div>
             </div>
-            <button id="attack-button" class="attack-button">Attack Boss</button>
           </div>
         </div>
       </div>
       
-      <!-- Settings button -->
-      <button id="settings-button" class="settings-button">⚙️ Settings</button>
+      <!-- Control buttons - moved outside of other containers for better accessibility -->
+      <div class="controls-container">
+        <button id="attack-button" class="attack-button">Attack Boss</button>
+        <button id="settings-button" class="settings-button">Settings</button>
+      </div>
     </div>
     
     <!-- Settings content -->
