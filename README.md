@@ -90,3 +90,9 @@ If you encounter issues:
 Canvas RPG was created to make academic task management more engaging and fun.
 
 Enjoy your adventure in Canvas RPG!
+
+-------
+to do :
+*fix back to game -typo 
+--update website
+-- fix genral bugs 
